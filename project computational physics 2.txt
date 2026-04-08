@@ -1,0 +1,242 @@
+﻿Objective: Use Python or MATLAB to solve Laplace’s equation for the cross-section of a
+
+coaxial cable.
+
+Geometry: An inner conductor of radius R1 = 2 cm at V = 100 V, and an outer
+
+conductor of radius R2 = 5 cm at V = 0 V.
+
+Task: Discretize the region between the conductors using a 2 D grid. Implement
+
+an iterative solver (Jacobi or Gauss-Seidel) to find the potential V (r, θ).
+es: A plot of the potential distribution and a comparison of the
+
+numerical result with the analytical solution
+
+.To solve Laplace’s equation \nabla^2 V = 0 for a coaxial cable, we leverage the symmetry of the geometry. While the problem is 2D, the potential in a coaxial cable varies only with the radial distance r. However, to satisfy the requirement of a **2D grid discretization**, we will solve it in Cartesian coordinates (x, y) using the finite-difference method.
+### 1. Analytical Solution
+For a coaxial cable, the potential V(r) at a distance r is given by:
+
+
+Where R_1 = 2\text{ cm}, R_2 = 5\text{ cm}, V_1 = 100\text{ V}, and V_2 = 0\text{ V}.
+### 2. Numerical Implementation (Python)
+We will use the **Gauss-Seidel** method, which updates the grid points in place, leading to faster convergence than the Jacobi method.
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+R1, R2 = 2.0, 5.0
+V_inner, V_outer = 100.0, 0.0
+grid_size = 100  # 100x100 grid
+L = 12.0         # Simulation box size (-6 to 6)
+x = np.linspace(-L/2, L/2, grid_size)
+y = np.linspace(-L/2, L/2, grid_size)
+X, Y = np.meshgrid(x, y)
+R = np.sqrt(X**2 + Y**2)
+
+# Initialize potential grid
+V = np.zeros((grid_size, grid_size))
+
+# Define Masks for Boundary Conditions
+inner_mask = R <= R1
+outer_mask = R >= R2
+mask_calc = (R > R1) & (R < R2) # Region to solve
+
+# Set Boundary Conditions
+V[inner_mask] = V_inner
+V[outer_mask] = V_outer
+
+# Iterative Solver (Gauss-Seidel approximation)
+iterations = 500
+for _ in range(iterations):
+    # Laplace discretization: V(i,j) = 0.25 * (V(i+1,j) + V(i-1,j) + V(i,j+1) + V(i,j-1))
+    V_old = V.copy()
+    V[1:-1, 1:-1] = 0.25 * (V[2:, 1:-1] + V[:-2, 1:-1] + V[1:-1, 2:] + V[1:-1, :-2])
+    
+    # Re-apply boundary conditions (Keep conductors at fixed V)
+    V[inner_mask] = V_inner
+    V[outer_mask] = V_outer
+
+# --- Comparison with Analytical Solution ---
+r_analog = np.linspace(R1, R2, 50)
+v_analog = V_inner * np.log(R2 / r_analog) / np.log(R2 / R1)
+
+# Extract radial profile from numerical results (along x-axis)
+center = grid_size // 2
+r_numeric = x[center + int(R1*(grid_size/L)) : center + int(R2*(grid_size/L))]
+v_numeric = V[center, center + int(R1*(grid_size/L)) : center + int(R2*(grid_size/L))]
+
+# --- Plotting ---
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.contourf(X, Y, V, levels=50, cmap='viridis')
+plt.colorbar(label='Potential (V)')
+plt.title('2D Potential Distribution')
+plt.xlabel('x (cm)')
+plt.ylabel('y (cm)')
+
+plt.subplot(1, 2, 2)
+plt.plot(r_analog, v_analog, 'r-', label='Analytical')
+plt.plot(r_numeric, v_numeric, 'bo', markersize=4, label='Numerical')
+plt.title('Potential vs Radius')
+plt.xlabel('r (cm)')
+plt.ylabel('V (Volts)')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+```
+### 3. Key Observations
+ * **Discretization:** The grid is a square Cartesian mesh. Points where r < R_1 are "locked" to 100\text{ V}, and points where r > R_2 are "locked" to 0\text{ V}.
+ * **The Algorithm:** The Gauss-Seidel method replaces the value at each point with the average of its four neighbors. This is the discrete form of the Laplacian operator:
+   
+ * **Convergence:** Increasing the number of iterations or the grid density will reduce the error between the "blue dots" (numerical) and the "red line" (analytical).
+### 4. Comparison Table
+| Feature | Analytical Solution | Numerical (Iterative) |
+|---|---|---|
+| **Complexity** | Simple formula | Requires computational loop |
+| **Flexibility** | Limited to symmetric shapes | Can solve arbitrary geometries |
+| **Accuracy** | Exact | Dependent on grid resolution (\Delta x) |
+
+
+Project2 Objective: Simulate the time evolution of a Gaussian wave packet encountering a
+
+double potential barrier.
+
+Potential:
+
+for and , and elsewhere.
+
+Task: Use the Crank-Nicolson method to evolve a wave packet starting at .
+
+Deliverables: An animation or a series of plots showing the probability density at
+
+different times. Discuss the phenomenon of “Resonant Tunneling” if observed.
+
+Submission Instructions:
+
+All answers and code must be compiled into a single report. Code should be wellcommented. Submit the final PDF to the course portal by April 1 3 th, 2 0 2 6 .
+
+V (r) = V0 ln
+
+(R
+
+/
+
+R
+
+)
+
+2
+
+1
+
+ln
+
+(R
+
+/
+
+r
+
+)
+
+2
+
+V (x) = VB
+
+x ∈
+
+
+To simulate the time evolution of a quantum wave packet, we solve the **Time-Dependent Schrödinger Equation (TDSE)**. Given the constraints, the **Crank-Nicolson method** is the gold standard here because it is both **unitary** (conserves probability) and **unconditionally stable**.
+## 1. Theoretical Framework
+We aim to solve:
+
+### The Crank-Nicolson Scheme
+By applying a Cayley form approximation to the evolution operator, we discretize the equation into a system of linear equations:
+
+Where \mathbf{H} is the Hamiltonian matrix using a second-order finite difference for the kinetic energy term:
+
+## 2. Python Implementation
+This script uses scipy.sparse for efficient matrix inversion and matplotlib for the animation.
+```python
+import numpy as np
+import scipy.sparse as sp
+from scipy.sparse.linalg import spsolve
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+# --- Parameters ---
+L = 100.0          # Domain length
+Nx = 1000          # Spatial grid points
+dx = L / Nx
+x = np.linspace(0, L, Nx)
+
+dt = 0.1           # Time step
+Nt = 500           # Number of steps
+hbar = 1.0
+m = 1.0
+
+# --- Potential: Double Barrier ---
+# VB = Barrier height, w = width, s = separation
+VB = 1.0
+w = 1.0
+s = 2.0
+V = np.zeros(Nx)
+barrier1 = (x > 45) & (x < 45 + w)
+barrier2 = (x > 45 + w + s) & (x < 45 + 2*w + s)
+V[barrier1 | barrier2] = VB
+
+# --- Initial Wave Packet ---
+x0 = 25.0
+sigma = 3.0
+k0 = 1.5
+psi = np.exp(-(x - x0)**2 / (2 * sigma**2)) * np.exp(1j * k0 * x)
+psi /= np.sqrt(np.sum(np.abs(psi)**2) * dx) # Normalize
+
+# --- Crank-Nicolson Matrices ---
+# Hamiltonian Matrix H
+diag = hbar**2 / (m * dx**2) + V
+off_diag = -hbar**2 / (2 * m * dx**2) * np.ones(Nx - 1)
+H = sp.diags([off_diag, diag, off_diag], [-1, 0, 1], format='csc')
+
+# Evolution matrices: (I + i*dt/2h * H) psi_next = (I - i*dt/2h * H) psi_curr
+I = sp.eye(Nx, format='csc')
+A = I + (0.5j * dt / hbar) * H
+B = I - (0.5j * dt / hbar) * H
+
+# --- Animation Setup ---
+fig, ax = plt.subplots()
+line, = ax.plot(x, np.abs(psi)**2, label="Probability Density")
+ax.fill_between(x, 0, V*0.1, color='gray', alpha=0.3, label="Potential (scaled)")
+ax.set_ylim(0, 0.4)
+ax.set_xlabel("Position (x)")
+ax.set_ylabel(r"$|\psi|^2$")
+ax.legend()
+
+def update(frame):
+    global psi
+    # Solve the linear system A * psi_new = B * psi_old
+    psi = spsolve(A, B @ psi)
+    line.set_ydata(np.abs(psi)**2)
+    return line,
+
+ani = FuncAnimation(fig, update, frames=Nt, interval=20, blit=True)
+plt.show()
+
+```
+## 3. Discussion: Resonant Tunneling
+In a double-barrier system, a phenomenon known as **Resonant Tunneling** occurs when the energy of the incident wave packet (E \approx \frac{\hbar^2 k_0^2}{2m}) aligns with a quasi-bound state energy level within the "well" created between the two barriers.
+### Key Observations:
+ 1. **Transparency:** Normally, a double barrier would significantly reflect the wave. However, at resonance, the transmission coefficient approaches **unity** (100\%), and the wave packet passes through as if the barriers were transparent.
+ 2. **Internal Build-up:** You will observe a significant increase in the probability density *between* the barriers before the wave exits on the right. This is the formation of a standing wave within the well.
+ 3. **Phase Sensitivity:** If the energy E does not match the resonance condition, the wave packet is almost entirely reflected, showing typical quantum tunneling decay.
+## 4. Final Submission Checklist
+ * [ ] **PDF Export:** Ensure the plots show the initial state, the interaction with the barrier, and the final transmitted/reflected states.
+ * [ ] **Code Comments:** Ensure variables like VB and k0 are clearly labeled as physics parameters.
+ * [ ] **Analysis:** Mention if your chosen k_0 (momentum) resulted in high or low transmission based on the barrier separation s.
+
+
