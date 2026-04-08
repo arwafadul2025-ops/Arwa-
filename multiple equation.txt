@@ -1,0 +1,209 @@
+﻿
+
+1. In the Finite Difference Method (FDM) for a 2 D Laplace equation on a square
+
+grid, the potential at an interior point is the average of: a) Its 2 nearest
+neighbors.
+b) Its 4 nearest neighbors.
+c) Its 8 nearest neighbors.
+d) All points on the boundary
+The answer is b) its 4 nearest neighbors.
+
+2. Which of the following is a characteristic of the Crank-Nicolson method for
+the Time-Dependent Schrödinger Equation? a) It is purely explicit and easy to
+calculate manually.
+b) It is unconditionally stable and second-order accurate in time.
+c) It is only stable for very small time steps .
+d) It ignores the potential term .
+
+the answer: b) It is unconditionally stable and second-order accurate in time.
+
+
+
+
+3. When discretizing the second derivative
+
+using a central difference
+
+scheme with grid spacing , the approximation is: a)
+
+b)
+
+c)
+
+d)
+
+(i, j)
+
+Δt
+
+V (x)
+
+∂
+
+x
+
+2
+
+∂
+
+V
+
+2
+
+h
+
+h
+
+V
+
+−V
+
+i+1
+
+i
+
+2
+
+h
+
+V
+
+−
+
+V
+
+i+1
+
+i−1
+
+h
+
+2
+
+V −2V
+
++V
+
+i+1
+
+i i−1
+
+h
+
+2
+
+V +2V
+
++V
+
+i+1
+
+i i−1
+
+The answer is c)
+
+4.4. In MATLAB, which operator is used to perform element-wise multiplication of
+
+two vectors? a) *
+
+b) .*
+
+c) ^
+
+d) &
+The answer is b)
+
+
+
+5. The Jacobi method for solving Laplace’s equation is an example of: a) An
+
+analytical solution technique.
+
+b) An iterative numerical method.
+
+c) A direct matrix inversion method.
+
+d) A stochastic simulation.
+The answer is b)
+
+
+
+6. In Python’s Matplotlib, which function is most suitable for visualizing a 2 D
+
+potential distribution as a heatmap? a) plt.plot()
+
+b) plt.scatter()
+
+c) plt.imshow()
+
+d) plt.hist()
+The answer is c)
+
+7. For a particle in an infinite square well, the boundary condition for the wave
+
+function at the walls is: a)
+
+b)
+
+c)Ψ = 0
+
+d) is a maximum.
+The answer is c) Ψ = 0
+
+
+.8 The “r” coefficient in the Crank-Nicolson discretization (
+
+) is: a)
+
+Always a real number.
+
+b) A purely imaginary number.
+
+c) A dimensionless constant.
+
+d) The probability density.
+The answer is b)
+
+
+9. Which numerical method is generally preferred for solving Poisson’s
+
+equation
+
+over large grids due to better convergence? a) Explicit
+
+Euler.
+
+b) Gauss-Seidel or Successive Over-Relaxation (SOR).
+
+c) Simple averaging.
+
+d) Forward difference.
+The answer is b)
+
+
+
+
+
+
+
+
+10. In computational physics,
+
+“normalization” of a wave function ensures
+
+that: a) The energy is zero.
+
+b) The total probability ∫ ∣Ψ∣
+
+2dx = 1.
+
+c) The wave function is real.
+
+d) The grid spacing is constant
+The answer is b)
+.
+
+
+
+
