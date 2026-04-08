@@ -1,0 +1,100 @@
+﻿1.Which of the following best describes the primary purpose of modeling in
+physics? a) To physically build a scaled-down version of a system. b) To create a
+mathematical representation of a physical system. c) To conduct experiments in
+a laboratory setting. d) To analyze experimental data without theoretical contex
+
+The answer:
+ b) To create a mathematical representation of a physical system
+
+
+
+2. Simulation in physics primarily involves: a) Deriving analytical solutions to
+
+complex equations. b) Executing a mathematical model using computational
+
+methods. c) Observing real-world phenomena directly. d) Developing new
+physical theories
+The answer : b) Executing a mathematical model using computational methods
+
+
+
+3. MATLAB is particularly well-suited for physics applications due to its strong
+
+capabilities in: a) Web development. b) Matrix operations. c) Natural language
+
+processing. d) Database management.
+
+The answer b) Matrix operation 
+
+4. Which MATLAB function is commonly used for solving ordinary differential
+
+equations (ODEs) numerically? a) plot() b) fprintf() c) ode45() d) for loop
+The answer is c)ode45()
+
+
+
+5. In Python, which library is most commonly used for plotting scientific data? a)
+
+numpy b) pandas c) matplotlib d) scipy
+
+The answer is c)matplotlib
+
+
+
+6. What is the primary function of a for loop in programming? a) To make
+
+decisions based on conditions. b) To execute a block of code repeatedly for a
+
+fixed number of times or over an iterable. c) To define a new function. d) To
+
+display output to the console.
+The answer : b)to execute ablock of code repeatedly for afixed number of times or over an iterable.
+
+
+
+
+
+
+ 
+
+7
+
+
+. Which of the following is an example of a conditional statement? a) while loop
+
+b) for loop c) if-else statement d) print() function
+
+The answer is c) if -else statement.
+
+
+
+8. To display formatted output to the console in Python, which method is generally
+
+preferred in modern Python? a) print() with string concatenation. b)
+
+sys.stdout.write() c) f-strings (formatted string literals). d) input()
+The answer is c) f- string (formatted string literals).
+
+
+
+9. When simulating projectile motion without air resistance, the horizontal velocity
+
+component: a) Increases over time. b) Decreases over time. c) Remains constant.
+
+d) Changes direction periodically
+The answer is c) remains constant.
+
+
+
+10. The coefficient of restitution (e) in a bouncing ball simulation determines: a)
+
+The initial height of the ball. b) The acceleration due to gravity. c) The ratio of
+
+final to initial velocity after an impact. d) The air resistance coefficient.
+ The answer is c)the ratio of final to initial velosity after an impact.
+
+
+
+
+
+
