@@ -1,0 +1,242 @@
+﻿Project 1 : Damped Harmonic Oscillator
+
+Problem: Simulate the motion of a damped harmonic oscillator. The equation of
+
+motion for a damped harmonic oscillator is given by:
+
+Where:
+
+: mass (e.g., 1 kg)
+
+: damping coefficient (e.g., 0 .5 Ns/m)
+
+: spring constant (e.g., 1 0 N/m)
+
+: displacement from equilibrium
+
+: time
+
+Tasks:
+
+1
+
+. Convert the second-order ODE into a system of two first-order ODEs.
+
+2
+
+. Write a script (in MATLAB or Python) to solve this system numerically using an
+
+appropriate ODE solver (e.g., ode45 in MATLAB, scipy.integrate.odeint or
+
+similar in Python).
+
+m
+
++
+
+dt
+
+2
+
+d
+
+2x
+
+c +
+
+dt
+
+dx
+
+kx = 0
+
+m
+
+c
+
+k
+
+x
+
+t
+3. Simulate the motion for a suitable time range (e.g., 2 0 seconds) with initial
+
+conditions meter and
+
+m/s.
+
+4
+
+. Plot the displacement ( ) as a function of time ( ).
+
+5
+
+. Clearly label your plot and include a title.
+
+x(0) = 1
+
+(0) =
+
+d
+
+t
+
+dx
+0
+This project involves analyzing a classic mechanical system where a mass experiences a restoring force from a spring and a resistive force from a damper.
+### 1. Converting to First-Order ODEs
+To solve a second-order ODE numerically, we must break it down into a system of two first-order equations. We define two state variables:
+ * y_1 = x (Displacement)
+ * y_2 = \frac{dx}{dt} = v (Velocity)
+Given the original equation:
+
+We rearrange for the highest derivative:
+
+This gives us our system:
+ 1.  2. ### 2. Python Simulation Script
+The following script uses scipy.integrate.solve_ivp, which is the modern standard for solving initial value problems in Python.
+```python
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+# 1. Define Parameters
+m = 1.0    # mass (kg)
+c = 0.5    # damping coefficient (Ns/m)
+k = 10.0   # spring constant (N/m)
+
+# 2. Define the system of ODEs
+def damped_oscillator(t, y):
+    x, v = y
+    dxdt = v
+    dvdt = -(c/m)*v - (k/m)*x
+    return [dxdt, dvdt]
+
+# 3. Set Initial Conditions and Time Span
+# x(0) = 1.0 m, v(0) = 0.0 m/s
+y0 = [1.0, 0.0]
+t_span = (0, 20)
+t_eval = np.linspace(0, 20, 1000) # Points where we want the solution
+
+# 4. Solve the ODE
+sol = solve_ivp(damped_oscillator, t_span, y0, t_eval=t_eval)
+
+# 5. Plotting
+plt.figure(figsize=(10, 6))
+plt.plot(sol.t, sol.y[0], 'b-', linewidth=2, label='Displacement (x)')
+plt.axhline(0, color='black', linestyle='--', alpha=0.3) # Equilibrium line
+plt.title('Damped Harmonic Oscillator Motion')
+plt.xlabel('Time (s)')
+plt.ylabel('Displacement (m)')
+plt.grid(True, linestyle=':', alpha=0.6)
+plt.legend()
+plt.show()
+
+```
+### 3. Understanding the Physics
+In your specific simulation (with c=0.5, m=1, k=10), the system is **underdamped**. This is determined by the damping ratio \zeta (zeta):
+ * If \zeta < 1: The system oscillates with a decaying amplitude (Underdamped).
+ * If \zeta = 1: The system returns to equilibrium as quickly as possible without oscillating (Critically Damped).
+ * If \zeta > 1: The system returns to equilibrium slowly without oscillating (Overdamped).
+For your values, \zeta = \frac{0.5}{2\sqrt{10}} \approx 0.079, which confirms the oscillating "decay" you will see in the generated plot.
+
+
+Project 2 : Random Walk Simulation in 2 D
+
+Problem: Simulate a 2 D random walk. A particle starts at the origin (0 ,0 ) and at each
+
+time step, it moves one unit step in a random direction (up, down, left, or right).
+
+Tasks:
+
+1
+
+. Write a script (in MATLAB or Python) to simulate a random walk for a specified
+
+number of steps (e.g., 1 0 0 0 steps).
+
+2
+
+. Store the coordinates of the particle at each step.
+
+3
+
+. Plot the trajectory of the random walk.
+
+4
+
+. Calculate and display the final displacement (distance from the origin) of the
+
+particle after all steps.
+
+5
+
+. Clearly label your plot and include a title.
+
+This is a classic problem in stochastic processes, often used to model everything from gas diffusion to stock market fluctuations. Below is a clean, efficient Python implementation using numpy for the math and matplotlib for the visualization.
+### Python Simulation: 2D Random Walk
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+def simulate_random_walk(num_steps):
+    # Initialize arrays to store coordinates (starting at 0,0)
+    x = np.zeros(num_steps + 1)
+    y = np.zeros(num_steps + 1)
+    
+    # Define possible moves: Up, Down, Left, Right
+    # Each row is a vector: [dx, dy]
+    directions = np.array([[0, 1], [0, -1], [-1, 0], [1, 0]])
+    
+    for i in range(1, num_steps + 1):
+        # Randomly select one of the four directions
+        step = directions[np.random.randint(0, 4)]
+        
+        # Update coordinates
+        x[i] = x[i-1] + step[0]
+        y[i] = y[i-1] + step[1]
+        
+    return x, y
+
+# Parameters
+n = 1000
+x_coords, y_coords = simulate_random_walk(n)
+
+# Calculate Final Displacement (Euclidean distance)
+final_displacement = np.sqrt(x_coords[-1]**2 + y_coords[-1]**2)
+
+# Plotting the Trajectory
+plt.figure(figsize=(8, 8))
+plt.plot(x_coords, y_coords, label='Path', lw=1, alpha=0.8)
+plt.scatter(0, 0, color='green', label='Start (0,0)', zorder=5)
+plt.scatter(x_coords[-1], y_coords[-1], color='red', label='End', zorder=5)
+
+# Formatting
+plt.title(f'2D Random Walk Simulation ({n} Steps)')
+plt.xlabel('X Coordinate')
+plt.ylabel('Y Coordinate')
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.axis('equal')  # Ensures 1 unit on x is same as 1 unit on y
+
+# Display result
+print(f"Final Position: ({x_coords[-1]}, {y_coords[-1]})")
+print(f"Final Displacement from Origin: {final_displacement:.2f} units")
+
+plt.show()
+
+```
+### Key Components of the Simulation
+ * **The Logic:** At every iteration, the particle "decides" its next move by picking an index from 0 to 3. Each index corresponds to a move in the Cartesian plane:
+   * (0, 1) — **Up**
+   * (0, -1) — **Down**
+   * (-1, 0) — **Left**
+   * (1, 0) — **Right**
+ * **Storage:** We use arrays of size N+1 to ensure we capture the starting position (0,0) plus every subsequent step.
+ * **Displacement Calculation:** Since we want the straight-line distance from the origin, we use the Pythagorean theorem:
+   
+### What to Expect in the Plot
+Because each direction has an equal probability (P = 0.25), the "expected" displacement is actually related to the square root of the number of steps. For 1,000 steps, you will typically see the particle end up roughly 25 to 40 units away from the origin, though because it is random, every run will look completely different!
+
+
+
